@@ -1,42 +1,33 @@
 package org.sheep1500.toyadvertisementbackend.lock;
 
+import lombok.Getter;
 
-import jakarta.persistence.*;
-import org.sheep1500.payment.common.jpa.LockIdConverter;
+import java.util.concurrent.TimeUnit;
 
-@Entity
-@Table(name = "locks")
-@IdClass(LockPK.class)
+@Getter
 public class LockData {
-    @Id
-    @Column(name = "lock_type", nullable = false)
-    private String type;
-
-    @Id
-    @Column(name = "lock_key", nullable = false)
     private String key;
+    private TimeUnit timeUnit;
+    private long waitTime;
+    private long leaseTime;
 
-    @Convert(converter = LockIdConverter.class)
-    @Column(name = "lock_id", nullable = false)
-    private LockId lockId;
-
-    @Column(nullable = false)
-    private long lockTimestamp;
-
-    @Column
-    private long expirationTimestamp;
-
-    protected LockData() {}
-
-    public LockData(String type, String key, LockId lockId, long timeoutMs) {
-        this.type = type;
+    public LockData(String key) {
         this.key = key;
-        this.lockId = lockId;
-        this.lockTimestamp = System.currentTimeMillis();
-        this.expirationTimestamp = this.lockTimestamp + timeoutMs;
+        this.timeUnit = TimeUnit.SECONDS;
+        this.waitTime = 5L;
+        this.leaseTime = 3L;
     }
 
-    public boolean isExpired() {
-        return expirationTimestamp < System.currentTimeMillis();
+    public LockData(String key, long waitTime, long leaseTime) {
+        this(key);
+        this.timeUnit = TimeUnit.SECONDS;
+        this.waitTime = waitTime;
+        this.leaseTime = leaseTime;
+
+    }
+
+    public LockData(String key, TimeUnit timeUnit, long waitTime, long leaseTime) {
+        this(key, waitTime, leaseTime);
+        this.timeUnit = timeUnit;
     }
 }

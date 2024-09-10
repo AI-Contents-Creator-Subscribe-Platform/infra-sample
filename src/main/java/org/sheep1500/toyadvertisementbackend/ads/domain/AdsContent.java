@@ -6,6 +6,7 @@ import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.sheep1500.toyadvertisementbackend.common.entity.BaseEntity;
 
@@ -24,8 +25,8 @@ public class AdsContent extends BaseEntity {
     private AdsImage image;
 
 
-    public AdsContent(AdsContentId id, AdsInfo info, AdsImage image) {
-        this.id = id;
+    @Builder
+    public AdsContent(AdsInfo info, AdsImage image) {
         this.info = info;
         this.image = image;
     }

@@ -41,4 +41,8 @@ public class AdsDisplayDate {
             throw new AdsValidException("no valid endDate");
         }
     }
+
+    public boolean isBetween(LocalDateTime date) {
+        return this.startDate.isAfter(date) && this.endDate.isBefore(date);
+    }
 }
