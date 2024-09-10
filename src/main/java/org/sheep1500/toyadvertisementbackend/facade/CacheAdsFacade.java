@@ -1,6 +1,5 @@
 package org.sheep1500.toyadvertisementbackend.facade;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
@@ -8,7 +7,6 @@ import org.springframework.stereotype.Component;
 import java.util.function.Supplier;
 
 @Component
-@RequiredArgsConstructor
 public class CacheAdsFacade {
 
     @Cacheable(value = "ads_current", key = "#cacheKey")

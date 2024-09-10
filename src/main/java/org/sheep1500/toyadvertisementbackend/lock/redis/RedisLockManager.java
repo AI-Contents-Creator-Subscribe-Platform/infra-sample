@@ -3,10 +3,7 @@ package org.sheep1500.toyadvertisementbackend.lock.redis;
 import lombok.RequiredArgsConstructor;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
-import org.sheep1500.toyadvertisementbackend.lock.LockData;
-import org.sheep1500.toyadvertisementbackend.lock.LockException;
-import org.sheep1500.toyadvertisementbackend.lock.LockManager;
-import org.sheep1500.toyadvertisementbackend.lock.LockNotExistException;
+import org.sheep1500.toyadvertisementbackend.lock.*;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -21,7 +18,7 @@ public class RedisLockManager implements LockManager {
         try {
             return rLock.tryLock(lockData.getWaitTime(), lockData.getLeaseTime(), lockData.getTimeUnit());
         } catch (InterruptedException e) {
-            throw new LockException();
+            throw new LockingFailException(e);
         }
     }
 

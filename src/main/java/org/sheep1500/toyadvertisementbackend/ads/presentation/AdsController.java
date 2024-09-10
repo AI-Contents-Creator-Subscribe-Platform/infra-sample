@@ -28,7 +28,7 @@ public class AdsController {
 
     @PostMapping
     public ApiResponseDto<?> create(@RequestBody @Valid AdsRequest.Create request) {
-        Ads ads = lockAdsFacade.locking(
+        Ads ads = lockAdsFacade.executeWithLock(
                 new LockData(request.name()),
                 () -> createAdsService.create(AdsDto.Create.builder()
                         .name(request.name())

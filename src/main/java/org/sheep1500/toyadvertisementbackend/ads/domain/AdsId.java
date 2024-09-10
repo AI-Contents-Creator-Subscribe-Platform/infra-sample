@@ -2,7 +2,9 @@ package org.sheep1500.toyadvertisementbackend.ads.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.sheep1500.toyadvertisementbackend.ads.domain.exception.AdsValidException;
 import org.springframework.util.StringUtils;
 
@@ -14,12 +16,10 @@ import java.util.Objects;
  */
 @Embeddable
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AdsId implements Serializable {
-    @Column(name = "ads_id", length = 20)
+    @Column(name = "ads_id")
     private String id;
-
-    protected AdsId() {
-    }
 
     public AdsId(String id) {
         this.validAssignmentId(id);
@@ -27,7 +27,7 @@ public class AdsId implements Serializable {
     }
 
     private void validAssignmentId(String id) {
-        if (!StringUtils.hasText(id) || id.length() != 20) {
+        if (!StringUtils.hasText(id)) {
             throw new AdsValidException("no valid ads id");
         }
     }

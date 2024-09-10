@@ -20,7 +20,7 @@ public class RedisCacheConfig {
         Map<String, RedisCacheConfiguration> cacheConfigurations = new HashMap<>();
 
         // 특정 캐시 이름에 다른 TTL 설정
-        cacheConfigurations.put("live1d@ads_current", RedisCacheConfiguration.defaultCacheConfig()
+        cacheConfigurations.put("ads_current", RedisCacheConfiguration.defaultCacheConfig()
                 .entryTtl(Duration.ofDays(1)));
 
         return RedisCacheManager.builder(redisConnectionFactory)

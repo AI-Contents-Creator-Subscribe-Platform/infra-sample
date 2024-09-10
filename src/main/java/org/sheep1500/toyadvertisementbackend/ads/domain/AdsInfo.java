@@ -25,6 +25,7 @@ public class AdsInfo {
 
     public AdsInfo(String name, String text) {
         this.name = name;
+        this.validName();
         this.text = text;
     }
 
