@@ -19,11 +19,8 @@ public enum RtCode {
     RT_NOT_EXIST(-10, "Not exist", HttpStatus.GONE),
     RT_DUPLICATED(-11, "Duplicated", HttpStatus.BAD_REQUEST),
     RT_NOT_SUPPORT(-12, "Not support", HttpStatus.NOT_FOUND),
-    RT_WRONG_TOKEN(-13, "Wrong Token", HttpStatus.UNAUTHORIZED),
-    RT_USER_NOT_FOUND(-14, "Wrong Email", HttpStatus.UNAUTHORIZED),
-    RT_WRONG_PASSWORD(-15, "Wrong Password", HttpStatus.UNAUTHORIZED),
-    RT_EXCEED_MAX_PASSWORD_WRONG_COUNT(-16, "Exceed max password wrong count", HttpStatus.UNAUTHORIZED),
     RT_ALREADY_REQUESTED_INIT(-17, "Already requested init", HttpStatus.UNAUTHORIZED),
+    RT_LOCK_FAIL(-18, "Lock fail", HttpStatus.INTERNAL_SERVER_ERROR),
     RT_FAILURE(-99, "Failure", HttpStatus.INTERNAL_SERVER_ERROR),
 
     //  Return Code [-3001XX]

@@ -18,7 +18,7 @@ public class AdsEventListener {
     public void createAdsEvent(CreateAdsEvent event) {
         Ads ads = event.ads();
 
-        if (!ads.getDisplayDate().isBetween(QueryAdsService.currentDateTime())) return;
+        if (!ads.isBetweenDate(QueryAdsService.currentDateTime())) return;
 
         cacheAdsFacade.evictCurrentDisplayAds(QueryAdsService.currentDateString());
     }

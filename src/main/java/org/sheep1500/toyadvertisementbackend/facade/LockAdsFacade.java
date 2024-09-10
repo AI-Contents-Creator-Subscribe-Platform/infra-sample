@@ -21,7 +21,7 @@ public class LockAdsFacade {
             }
 
             return supplier.get();
-        } catch (Exception e) {
+        } catch (LockException e) {
             throw new LockException(e);
         } finally {
             lockManager.releaseLock(lockData.getKey());

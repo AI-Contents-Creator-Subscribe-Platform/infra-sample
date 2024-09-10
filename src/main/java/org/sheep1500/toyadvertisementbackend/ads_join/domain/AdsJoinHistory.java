@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Document(collection = "ads_join_history")
@@ -20,11 +21,11 @@ public class AdsJoinHistory {
     private String userId;
     private String adId;
     private String adName;
-    private double rewardAmount;
+    private BigDecimal rewardAmount;
     private LocalDateTime joinDate;
 
     @Builder
-    public AdsJoinHistory(String userId, String adId, String adName, double rewardAmount, LocalDateTime joinDate) {
+    public AdsJoinHistory(String userId, String adId, String adName, BigDecimal rewardAmount, LocalDateTime joinDate) {
         this.userId = userId;
         this.adId = adId;
         this.adName = adName;

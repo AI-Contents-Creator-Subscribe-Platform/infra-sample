@@ -5,7 +5,7 @@ import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.sheep1500.toyadvertisementbackend.ads.domain.exception.AdsValidException;
+import org.sheep1500.toyadvertisementbackend.ads.exception.AdsValidException;
 
 /**
  * 결제금액 정보를 담는 밸류

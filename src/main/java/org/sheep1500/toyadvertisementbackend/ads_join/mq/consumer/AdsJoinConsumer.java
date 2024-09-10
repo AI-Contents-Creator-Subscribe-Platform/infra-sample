@@ -51,7 +51,6 @@ public class AdsJoinConsumer {
                                             .build();
 
                                     adsJoinHistoryRepository.save(adsJoinHistory);
-                                    // 추가 로직
                                 } catch (Exception e) {
                                     // 트랜잭션 롤백
                                     status.setRollbackOnly();

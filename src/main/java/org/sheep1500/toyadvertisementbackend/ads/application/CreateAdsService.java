@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.sheep1500.toyadvertisementbackend.ads.application.dto.AdsDto;
 import org.sheep1500.toyadvertisementbackend.ads.domain.*;
 import org.sheep1500.toyadvertisementbackend.ads.event.CreateAdsEvent;
+import org.sheep1500.toyadvertisementbackend.ads.exception.AdsExistNameException;
 import org.sheep1500.toyadvertisementbackend.common.domain.IdGenerator;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class CreateAdsService {
 
     private final AdsRepository repository;
+    private final AdsContentRepository contentRepository;
 
     private final ApplicationEventPublisher eventPublisher;
 
@@ -24,10 +26,15 @@ public class CreateAdsService {
 
     @Transactional
     public Ads create(AdsDto.Create dto) {
+        if (contentRepository.existsByInfo_name(dto.name())) {
+            throw new AdsExistNameException("exist ad name[" + dto.name() + "]");
+        }
+        AdsId id = createAdsId();
         Ads ads = Ads.builder()
-                .id(createAdsId())
+                .id(id)
                 .reward(new RewardAmounts(dto.reward()))
                 .content(AdsContent.builder()
+                        .adsId(id)
                         .info(new AdsInfo(dto.name(), dto.text()))
                         .image(new AdsImage(dto.imageUrl()))
                         .build())

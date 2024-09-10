@@ -4,6 +4,7 @@ package org.sheep1500.toyadvertisementbackend.ads.domain;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.sheep1500.toyadvertisementbackend.common.entity.BaseEntity;
 
@@ -12,12 +13,10 @@ import org.sheep1500.toyadvertisementbackend.common.entity.BaseEntity;
         @UniqueConstraint(columnNames = "ad_name")
 })
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class AdsContent extends BaseEntity {
 
     @EmbeddedId
-    private AdsContentId id;
-
-    @Embedded
     private AdsId adsId;
 
     @Embedded
@@ -28,7 +27,8 @@ public class AdsContent extends BaseEntity {
 
 
     @Builder
-    public AdsContent(AdsInfo info, AdsImage image) {
+    public AdsContent(AdsId adsId, AdsInfo info, AdsImage image) {
+        this.adsId = adsId;
         this.info = info;
         this.image = image;
     }

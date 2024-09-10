@@ -3,6 +3,7 @@
 ---
 
 docker-compose up -d
+<br/>
 ./gradlew 
 
 

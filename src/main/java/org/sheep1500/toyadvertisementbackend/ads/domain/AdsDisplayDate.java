@@ -5,7 +5,7 @@ import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.sheep1500.toyadvertisementbackend.ads.domain.exception.AdsValidException;
+import org.sheep1500.toyadvertisementbackend.ads.exception.AdsValidException;
 
 import java.time.LocalDateTime;
 
@@ -42,7 +42,7 @@ public class AdsDisplayDate {
         }
     }
 
-    public boolean isBetween(LocalDateTime date) {
-        return this.startDate.isAfter(date) && this.endDate.isBefore(date);
+    protected boolean isBetween(LocalDateTime date) {
+        return this.startDate.isBefore(date) && this.endDate.isAfter(date);
     }
 }

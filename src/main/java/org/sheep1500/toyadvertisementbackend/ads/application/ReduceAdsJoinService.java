@@ -17,9 +17,9 @@ public class ReduceAdsJoinService {
 
     @Transactional
     public void reduceJoinCount(AdsId adsId) {
-        Ads ads = repository.findById(adsId).orElseThrow(EntityNotFoundException::new);
+        Ads ads = repository.findById(adsId).orElseThrow(() -> new EntityNotFoundException("ads not exist"));
         if (!ads.enableJoin()) {
-            throw new DisableJoinAdsException();
+            throw new DisableJoinAdsException("current limit over");
         }
 
         ads.getLimit().reduce();

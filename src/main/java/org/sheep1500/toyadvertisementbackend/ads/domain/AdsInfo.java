@@ -6,15 +6,15 @@ import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.sheep1500.toyadvertisementbackend.ads.domain.exception.AdsValidException;
+import org.sheep1500.toyadvertisementbackend.ads.exception.AdsValidException;
 import org.springframework.util.StringUtils;
 
 /**
  * 광고 정보 밸류
  */
 @Embeddable
-@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class AdsInfo {
 
     @Column(name = "ad_name", nullable = false, unique = true)
@@ -30,7 +30,7 @@ public class AdsInfo {
     }
 
     private void validName() {
-        if(!StringUtils.hasLength(name)) {
+        if (!StringUtils.hasLength(name)) {
             throw new AdsValidException("no valid name");
         }
     }

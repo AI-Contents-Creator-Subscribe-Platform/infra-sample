@@ -17,4 +17,6 @@ public abstract class BaseEntity {
 
     @Column(name = "del_date")
     private LocalDateTime delDate;
+
+    public BaseEntity() {this.regDate = LocalDateTime.now();}
 }

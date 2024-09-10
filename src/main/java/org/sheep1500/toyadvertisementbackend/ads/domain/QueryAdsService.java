@@ -17,8 +17,14 @@ public class QueryAdsService {
     private final AdsRepository repository;
 
     @Transactional(readOnly = true)
-    public List<Ads> currentDisplayAdsList() {
-        return repository.currentDisplayAdsList(currentDateTime());
+    public List<AdsSummary> currentDisplayAdsList() {
+        return repository.currentDisplayAdsList(currentDateTime()).stream().map(ads -> AdsSummary.builder()
+                .adsId(ads.getId().getId())
+                .adsName(ads.getContent().getInfo().getName())
+                .adsDescription(ads.getContent().getInfo().getText())
+                .imageUrl(ads.getContent().getImage().getUrl())
+                .reward(ads.getReward().getAmounts())
+                .build()).toList();
     }
 
     @Transactional(readOnly = true)

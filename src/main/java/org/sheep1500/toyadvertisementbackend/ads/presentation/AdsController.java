@@ -2,9 +2,11 @@ package org.sheep1500.toyadvertisementbackend.ads.presentation;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.sheep1500.toyadvertisementbackend.ads.application.CreateAdsService;
 import org.sheep1500.toyadvertisementbackend.ads.application.dto.AdsDto;
 import org.sheep1500.toyadvertisementbackend.ads.domain.Ads;
+import org.sheep1500.toyadvertisementbackend.ads.domain.AdsSummary;
 import org.sheep1500.toyadvertisementbackend.ads.domain.QueryAdsService;
 import org.sheep1500.toyadvertisementbackend.ads.presentation.dto.AdsRequest;
 import org.sheep1500.toyadvertisementbackend.common.api.response.ApiResponseDto;
@@ -18,6 +20,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/ads")
 @RequiredArgsConstructor
+@Slf4j
 public class AdsController {
 
     private final CreateAdsService createAdsService;
@@ -40,12 +43,13 @@ public class AdsController {
                         .endDate(request.endDate())
                         .build()));
 
+        log.info("created ads adId[{}]", ads.getId());
         return ApiResponseDto.createOK(ads);
     }
 
     @GetMapping("/currentDisplayAdsList")
     public ApiResponseDto<?> currentDisplayAdsList() {
-        List<Ads> list = cacheAdsFacade.cacheCurrentDisplayAds(
+        List<AdsSummary> list = cacheAdsFacade.cacheCurrentDisplayAds(
                 QueryAdsService.currentDateString(),
                 queryAdsService::currentDisplayAdsList
         );
