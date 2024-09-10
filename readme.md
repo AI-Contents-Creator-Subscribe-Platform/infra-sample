@@ -1,3 +1,10 @@
+## 개발
+
+---
+
+docker-compose up -d
+./gradlew 
+
 
 ## 요구사항
 
@@ -16,6 +23,7 @@
 - 작성한 어플리케이션 코드의 가독성 좋고 의도가 명확한가? 
 - 작성한 테스트 코드는 적절한 범위의 테스트를 수행하고 있는가? (예. 유닛/통합 테스트 등)
 - 어플리케이션은 다량의 트래픽에도 무리가 없도록 효율적으로 작성되었는가?
+
 
 
 ## 작성사항
@@ -140,7 +148,7 @@
 
 ```sql
 CREATE TABLE ads (
-    ad_id INT AUTO_INCREMENT PRIMARY KEY,  -- 광고 ID (Unique ID, 자동 증가)
+    ad_id varchar(50) PRIMARY KEY,  -- 광고 ID (Unique ID, 자동 증가)
     reward_amount DECIMAL(10, 2) NOT NULL, -- 광고 참여시 적립 액수
     participation_limit INT NOT NULL,      -- 광고 참여 가능 횟수
     current_participation_limit INT NOT NULL,      -- 현재 광고 참여 가능 횟수
@@ -150,7 +158,7 @@ CREATE TABLE ads (
 
 CREATE TABLE ads_content (
    content_id INT AUTO_INCREMENT PRIMARY KEY,  -- 콘텐츠 ID (Unique ID, 자동 증가)
-   ad_id INT NOT NULL,                         -- 광고 ID (외래 키)
+   ad_id varchar(50) NOT NULL,                         -- 광고 ID (외래 키)
    ad_name VARCHAR(255) NOT NULL,              -- 광고명
    ad_text VARCHAR(500),                       -- 광고 문구
    image_url VARCHAR(500),                     -- 광고 이미지 URL

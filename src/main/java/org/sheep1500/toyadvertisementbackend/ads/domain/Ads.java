@@ -10,7 +10,7 @@ import org.sheep1500.toyadvertisementbackend.common.entity.BaseEntity;
 
 @Entity
 @Table(name = "T_ADS",
-        indexes = @Index(name = "t_ads_indexes", columnList = "display_start_date, display_end_date, current_participant_limit")
+        indexes = @Index(name = "t_ads_indexes", columnList = "display_start_date, display_end_date, current_join_limit")
 )
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Ads extends BaseEntity {
@@ -31,7 +31,7 @@ public class Ads extends BaseEntity {
     private AdsDisplayDate displayDate;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "ad_content_id")
+    @JoinColumn(name = "adsId", referencedColumnName = "ads_id")
     private AdsContent content;
 
     @Builder

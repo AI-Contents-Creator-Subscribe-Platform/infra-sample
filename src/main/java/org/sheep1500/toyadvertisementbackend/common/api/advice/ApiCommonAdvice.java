@@ -2,8 +2,8 @@ package org.sheep1500.toyadvertisementbackend.common.api.advice;
 
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.ConstraintViolationException;
-import org.sheep1500.assignmenttemplate.common.api.response.ApiResponseDto;
-import org.sheep1500.assignmenttemplate.common.api.response.RtCode;
+import org.sheep1500.toyadvertisementbackend.common.api.response.ApiResponseDto;
+import org.sheep1500.toyadvertisementbackend.common.api.response.RtCode;
 import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
@@ -16,14 +16,14 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.Objects;
 
-@RestControllerAdvice // REST 요청에 대한 에러를 핸들링
+@RestControllerAdvice
 @Slf4j
 public class ApiCommonAdvice {
 
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(value = Exception.class)
 	public ApiResponseDto<String> handleBaseException(Exception e) {
-		log.error("[{}]", RtCode.RT_INTERNAL_ERROR.getRtCode(), e.getCause() != null ? e.getCause() : e);
+		log.error("[{},{}]", RtCode.RT_INTERNAL_ERROR.getRtCode(), e.getCause() != null ? e.getCause() : e);
 		return ApiResponseDto.createException(RtCode.RT_INTERNAL_ERROR, e.getMessage());
 	}
 

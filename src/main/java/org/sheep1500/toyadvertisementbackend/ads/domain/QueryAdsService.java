@@ -18,7 +18,7 @@ public class QueryAdsService {
 
     @Transactional(readOnly = true)
     public List<Ads> currentDisplayAdsList() {
-        return repository.currentDisplayAdsList(currentDate());
+        return repository.currentDisplayAdsList(currentDateTime());
     }
 
     @Transactional(readOnly = true)

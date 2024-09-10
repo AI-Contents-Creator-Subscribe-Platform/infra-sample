@@ -6,15 +6,12 @@ import org.sheep1500.toyadvertisementbackend.ads.domain.Ads;
 import org.sheep1500.toyadvertisementbackend.ads.domain.AdsId;
 import org.sheep1500.toyadvertisementbackend.ads.domain.QueryAdsService;
 import org.sheep1500.toyadvertisementbackend.ads_join.application.dto.AdsJoinDto;
-import org.sheep1500.toyadvertisementbackend.ads_join.domain.AdsJoinHistory;
 import org.sheep1500.toyadvertisementbackend.ads_join.domain.QueryAdsJoinService;
 import org.sheep1500.toyadvertisementbackend.ads_join.exception.DisableJoinAdsException;
 import org.sheep1500.toyadvertisementbackend.ads_join.exception.JoinExistException;
 import org.sheep1500.toyadvertisementbackend.ads_join.mq.event.AdsJoinEvent;
 import org.sheep1500.toyadvertisementbackend.ads_join.mq.producer.AdsJoinProducer;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

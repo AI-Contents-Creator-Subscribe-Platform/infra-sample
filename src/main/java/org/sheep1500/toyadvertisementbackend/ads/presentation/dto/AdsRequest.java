@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class AdsRequest {
 
 
-
-    public record Create (@NotEmpty String name, BigDecimal reward, Integer joinCount, String text, String imageUrl, LocalDateTime startDate, LocalDateTime endDate) {
+    public record Create(@NotEmpty String name, BigDecimal reward, Integer joinCount, String text, String imageUrl,
+                         LocalDateTime startDate, LocalDateTime endDate) {
     }
 }

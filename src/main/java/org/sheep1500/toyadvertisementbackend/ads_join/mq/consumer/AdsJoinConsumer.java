@@ -10,8 +10,12 @@ import org.sheep1500.toyadvertisementbackend.ads_join.domain.AdsJoinHistoryRepos
 import org.sheep1500.toyadvertisementbackend.ads_join.mq.event.AdsJoinEvent;
 import org.sheep1500.toyadvertisementbackend.facade.LockAdsFacade;
 import org.sheep1500.toyadvertisementbackend.lock.LockData;
+import org.sheep1500.toyadvertisementbackend.mq.config.RabbitMQConfig;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallbackWithoutResult;
+import org.springframework.transaction.support.TransactionTemplate;
 
 @Component
 @RequiredArgsConstructor
@@ -22,24 +26,43 @@ public class AdsJoinConsumer {
     private final LockAdsFacade lockAdsFacade;
     private final ReduceAdsJoinService reduceAdsJoinService;
     private final CreateAdsJoinService createAdsJoinService;
+    private final TransactionTemplate transactionTemplate;
 
-    @RabbitListener(queues = "#{queueName}")
-    public void handleAdParticipation(AdsJoinEvent event) {
-        lockAdsFacade.executeWithLock(new LockData(event.getAdId(), 100L, 100L),
-                () -> {
-                    createAdsJoinService.validJoin(event.getUserId(), event.getAdId());
+    @RabbitListener(queues = RabbitMQConfig.QUEUE_NAME)
+    public void handleJoinAds(AdsJoinEvent event) {
+        try {
+            lockAdsFacade.executeWithLock(new LockData(event.getAdId(), 100L, 100L),
+                    () -> {
+                        transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+                            @Override
+                            protected void doInTransactionWithoutResult(TransactionStatus status) {
+                                try {
+                                    // 트랜잭션 내에서 실행할 메소드
+                                    createAdsJoinService.validJoin(event.getUserId(), event.getAdId());
 
-                    reduceAdsJoinService.reduceJoinCount(new AdsId(event.getAdId()));
+                                    reduceAdsJoinService.reduceJoinCount(new AdsId(event.getAdId()));
 
-                    AdsJoinHistory adsJoinHistory = AdsJoinHistory.builder()
-                            .userId(event.getUserId())
-                            .adId(event.getAdId())
-                            .adName(event.getAdName())
-                            .rewardAmount(event.getRewardAmount())
-                            .joinDate(event.getJoinTime())
-                            .build();
+                                    AdsJoinHistory adsJoinHistory = AdsJoinHistory.builder()
+                                            .userId(event.getUserId())
+                                            .adId(event.getAdId())
+                                            .adName(event.getAdName())
+                                            .rewardAmount(event.getRewardAmount())
+                                            .joinDate(event.getJoinTime())
+                                            .build();
 
-                    adsJoinHistoryRepository.save(adsJoinHistory);
-                });
+                                    adsJoinHistoryRepository.save(adsJoinHistory);
+                                    // 추가 로직
+                                } catch (Exception e) {
+                                    // 트랜잭션 롤백
+                                    status.setRollbackOnly();
+                                    throw e;
+                                }
+                            }
+                        });
+
+                    });
+        } catch (Exception e) {
+            log.error("", e);
+        }
     }
 }
