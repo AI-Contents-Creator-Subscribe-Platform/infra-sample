@@ -24,12 +24,12 @@ public class CreateAdsJoinService {
 
     public void create(AdsJoinDto.Create dto) {
         // 참여가능한지 조회
-        if(!this.validJoin(dto.getUserId(), dto.getAdId())) {
+        if(!this.validJoin(dto.userId(), dto.adId())) {
             throw new RuntimeException();
         }
         adsJoinProducer.sendJoinAdsEvent(AdsJoinEvent.builder()
-                .userId(dto.getUserId())
-                .adId(dto.getAdId())
+                .userId(dto.userId())
+                .adId(dto.adId())
                 .build());
     }
 

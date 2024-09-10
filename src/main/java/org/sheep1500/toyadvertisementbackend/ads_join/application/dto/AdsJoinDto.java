@@ -7,12 +7,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class AdsJoinDto {
 
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Getter
-    public static class Create {
-        private String userId;
-        private String adId;
+    public record Create (String userId, String adId){
+
     }
 }

@@ -12,14 +12,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class AdsJoinRequest {
 
+    public record Create (@NotBlank String userId, @NotBlank String adId){
 
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Data
-    public static class Create {
-        @NotBlank
-        private String userId;
-        @NotBlank
-        private String adId;
     }
 }

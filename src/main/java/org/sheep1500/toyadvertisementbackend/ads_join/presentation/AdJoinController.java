@@ -26,10 +26,7 @@ public class AdJoinController {
     @PostMapping
     public ApiResponseDto<?> joinAd(@RequestBody @Valid AdsJoinRequest.Create request) {
         // 1. MQ로 이벤트 publishing
-        createAdsJoinService.create(AdsJoinDto.Create.builder()
-                .userId(request.getUserId())
-                .adId(request.getAdId())
-                .build());
+        createAdsJoinService.create(new AdsJoinDto.Create(request.userId(), request.adId()));
 
         // 2. join 됐는지 확인, 실제로는 polling 등 재확인 요청으로 로직 분리
 //        Optional<AdsJoinHistory> adsJoinHistory = queryAdsJoinService.getByUserIdAndAdId(request.getUserId(), request.getAdId());
