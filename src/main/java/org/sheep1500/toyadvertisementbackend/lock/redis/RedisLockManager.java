@@ -17,9 +17,9 @@ public class RedisLockManager implements LockManager {
 
     @Override
     public boolean tryLock(LockData lockData) throws LockException {
-        RLock rLock = redissonClient.getLock(lockData.key());
+        RLock rLock = redissonClient.getLock(lockData.getKey());
         try {
-            return rLock.tryLock(lockData.waitTime(), lockData.leaseTime(), lockData.timeUnit());
+            return rLock.tryLock(lockData.getWaitTime(), lockData.getLeaseTime(), lockData.getTimeUnit());
         } catch (InterruptedException e) {
             throw new LockException();
         }
