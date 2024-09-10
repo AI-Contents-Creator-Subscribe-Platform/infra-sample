@@ -20,7 +20,7 @@ POST http://localhost:8080/api/v1/joinAd
 Content-Type: application/json
 
 {
-  "userId": "userId2",
+  "userId": "userId10",
   "adId": "ads2409110018191wjg2ke4rcewn"
 }
 

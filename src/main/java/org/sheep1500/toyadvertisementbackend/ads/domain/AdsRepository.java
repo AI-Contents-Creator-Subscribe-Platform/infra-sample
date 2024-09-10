@@ -14,6 +14,7 @@ public interface AdsRepository extends JpaRepository<Ads, AdsId> {
             " from Ads ads" +
             " where 1=1 " +
             " and :currentDateTime BETWEEN ads.displayDate.startDate and ads.displayDate.endDate" +
+            " and ads.limit.currentLimit > 0" +
             " order by ads.reward.amounts desc limit 10")
     List<Ads> currentDisplayAdsList(LocalDateTime currentDateTime);
 

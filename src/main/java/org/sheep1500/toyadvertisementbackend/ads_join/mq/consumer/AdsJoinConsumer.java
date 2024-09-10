@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.sheep1500.toyadvertisementbackend.ads.application.ReduceAdsJoinService;
 import org.sheep1500.toyadvertisementbackend.ads.domain.AdsId;
+import org.sheep1500.toyadvertisementbackend.ads.event.JoinAdsEvent;
 import org.sheep1500.toyadvertisementbackend.ads_join.application.CreateAdsJoinService;
 import org.sheep1500.toyadvertisementbackend.ads_join.domain.AdsJoinHistory;
 import org.sheep1500.toyadvertisementbackend.ads_join.domain.AdsJoinHistoryRepository;
@@ -12,6 +13,7 @@ import org.sheep1500.toyadvertisementbackend.facade.LockAdsFacade;
 import org.sheep1500.toyadvertisementbackend.lock.LockData;
 import org.sheep1500.toyadvertisementbackend.mq.config.RabbitMQConfig;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
@@ -27,6 +29,7 @@ public class AdsJoinConsumer {
     private final ReduceAdsJoinService reduceAdsJoinService;
     private final CreateAdsJoinService createAdsJoinService;
     private final TransactionTemplate transactionTemplate;
+    private final ApplicationEventPublisher eventPublisher;
 
     @RabbitListener(queues = RabbitMQConfig.QUEUE_NAME)
     public void handleJoinAds(AdsJoinEvent event) {
@@ -51,6 +54,9 @@ public class AdsJoinConsumer {
                                             .build();
 
                                     adsJoinHistoryRepository.save(adsJoinHistory);
+
+                                    eventPublisher.publishEvent(new JoinAdsEvent(new AdsId(event.getAdId()
+                                    )));
                                 } catch (Exception e) {
                                     // 트랜잭션 롤백
                                     status.setRollbackOnly();
