@@ -34,7 +34,7 @@ public class LockAdsFacade {
                 throw new LockingFailException();
             }
             task.run();
-        } catch (Exception e) {
+        } catch (LockException e) {
             throw new LockException(e);
         } finally {
             lockManager.releaseLock(lockData.getKey());

@@ -36,7 +36,7 @@
 
 ---
 
-기술 스택
+**기술 스택**
 
 Java(JDK 17), Spring Boot(3.3.3), RDBMS(MySQL, H2), NoSQL(MongoDB), Cache/Lock(Redis), Message Broker(RabbitMQ)
 
@@ -102,7 +102,7 @@ java -jar ./build/libs/toy-advertisement-backend-0.0.1-SNAPSHOT.jar
 - 사용자 구분: 일반 사용자 / 광고 가맹점
   - 일반 사용자: 광고 조회, 광고 참여, 광고
   - 광고 가맹점: 광고 등록
-- 전체 수: 4,000만명 / 100만개
+- 전체 수: 4,200만명 / 100만개
 - MAU: 2,400만명 / 50만개 (높은 활성 비율 50% 기준) 
 - DAU
   - 일반 사용자: 디스플레이 전체 광고 상품 단가표 기준(페이홈>홈 기준) 
@@ -219,7 +219,6 @@ java -jar ./build/libs/toy-advertisement-backend-0.0.1-SNAPSHOT.jar
 - 모니터링 및 로깅 
   - 트래픽 증가에 대비해 실시간 스케일링 가능한 모니터링 시스템 필요
 - 백업 및 장애 복구
-  - DR 계획 
 - API Rate Limiting
   - 트래픽 폭증 시 대비를 위한 Rate Limiting 설정 
 - 대용량 데이터
@@ -238,36 +237,7 @@ java -jar ./build/libs/toy-advertisement-backend-0.0.1-SNAPSHOT.jar
 
 ---
 
-### 테이블
-
-
-### **SQL Schema (광고 테이블 생성)**
-
-```sql
-CREATE TABLE ads (
-    ad_id varchar(50) PRIMARY KEY,  -- 광고 ID (Unique ID, 자동 증가)
-    reward_amount DECIMAL(10, 2) NOT NULL, -- 광고 참여시 적립 액수
-    participation_limit INT NOT NULL,      -- 광고 참여 가능 횟수
-    current_participation_limit INT NOT NULL,      -- 현재 광고 참여 가능 횟수
-    display_start_date DATE NOT NULL,      -- 광고 노출 시작 기간
-    display_end_date DATE NOT NULL,        -- 광고 노출 종료 기간
-);
-
-CREATE TABLE ads_content (
-   content_id INT AUTO_INCREMENT PRIMARY KEY,  -- 콘텐츠 ID (Unique ID, 자동 증가)
-   ad_id varchar(50) NOT NULL,                         -- 광고 ID (외래 키)
-   ad_name VARCHAR(255) NOT NULL,              -- 광고명
-   ad_text VARCHAR(500),                       -- 광고 문구
-   image_url VARCHAR(500),                     -- 광고 이미지 URL
-   UNIQUE (ad_name),                           -- 광고명 중복 불가 제약 조건
-   FOREIGN KEY (ad_id) REFERENCES ads(ad_id)   -- 광고 테이블과의 관계 설정
-);
-
-CREATE INDEX idx_ads_participation_date
-  ON ads (current_participation_limit, display_start_date, display_end_date);
-
-```
-
+![ads_domain](https://github.com/user-attachments/assets/7786ee86-daff-49d6-9d8c-c34dc8c49f93)
 
 
 

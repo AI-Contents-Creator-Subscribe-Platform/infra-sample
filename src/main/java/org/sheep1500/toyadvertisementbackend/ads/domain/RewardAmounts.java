@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RewardAmounts {
-    @Column(name = "amounts")
+    @Column(name = "reward_amounts")
     private BigDecimal amounts;
 
     public RewardAmounts(BigDecimal amounts) {
