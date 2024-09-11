@@ -1,13 +1,5 @@
-## 개발
 
----
-**TODO**
-
-- 도메인 & 흐름도 (수요일 작업)
-- 통합 테스트
-
-
-## 요구사항
+## 0. 요구사항
 
 - 아래 API 목록을 구현 합니다. 
   - 광고 등록 API 
@@ -17,20 +9,6 @@
 - 어플리케이션이 다수의 서버에 다수의 인스턴스로 동작하더라도 문제가 없어야 합니다. 
 - 각 기능 및 제약사항에 대한 단위테스트를 반드시 작성합니다.
 
-## 평가항목
-
-- 프로젝트 구성 방법 및 관련된 시스템 아키텍쳐 설계 방법이 적절한가? 
-- 요구사항을 잘 이해하고 구현하였는가? 
-- 작성한 어플리케이션 코드의 가독성 좋고 의도가 명확한가? 
-- 작성한 테스트 코드는 적절한 범위의 테스트를 수행하고 있는가? (예. 유닛/통합 테스트 등)
-- 어플리케이션은 다량의 트래픽에도 무리가 없도록 효율적으로 작성되었는가?
-
-
-
-## 작성사항
-
-- 설계 내용과 설계의 이유
-- 핵심 문제해결 전략 및 분석한 내용
 
 # 1. 프로젝트 설명
 
@@ -38,7 +16,7 @@
 
 **기술 스택**
 
-Java(JDK 17), Spring Boot(3.3.3), RDBMS(MySQL, H2), NoSQL(MongoDB), Cache/Lock(Redis), Message Broker(RabbitMQ)
+Java(JDK 17), Spring Boot(3.3.3), RDBMS(MySQL), NoSQL(MongoDB), Cache/Lock(Redis), Message Broker(RabbitMQ)
 
 ### 빌드 및 실행 방법
 
@@ -229,19 +207,23 @@ java -jar ./build/libs/toy-advertisement-backend-0.0.1-SNAPSHOT.jar
 
 
 
-# 3. 도메인 및 흐름도
+# 3. 도메인 및 서비스 Flow
 
 ---
 
 ## 도메인
 
----
-
 ![ads_domain](https://github.com/user-attachments/assets/7786ee86-daff-49d6-9d8c-c34dc8c49f93)
 
+## 서비스 흐름도
+
+### 광고 서비스 Flow
+
+![광고flow (1)](https://github.com/user-attachments/assets/a0c57435-c6f4-4787-a356-4622a97e2c15)
+
+### 사용자 광고/참여 서비스 Flow
+
+![사용자광고flow](https://github.com/user-attachments/assets/42753435-63ff-48aa-81fc-86ede3ce70bf)
 
 
-## 흐름도
-
----
 
