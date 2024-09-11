@@ -3,7 +3,7 @@ package org.sheep1500.toyadvertisementbackend.ads.domain;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.sheep1500.toyadvertisementbackend.ads.domain.fixture.AdsDisplayDateFixture;
+import org.sheep1500.toyadvertisementbackend.fixture.AdsDisplayDateFixture;
 import org.sheep1500.toyadvertisementbackend.ads.exception.AdsValidException;
 
 import java.time.LocalDateTime;

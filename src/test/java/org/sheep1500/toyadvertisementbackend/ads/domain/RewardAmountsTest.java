@@ -2,7 +2,7 @@ package org.sheep1500.toyadvertisementbackend.ads.domain;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.sheep1500.toyadvertisementbackend.ads.domain.fixture.RewardAmountsFixture;
+import org.sheep1500.toyadvertisementbackend.fixture.RewardAmountsFixture;
 import org.sheep1500.toyadvertisementbackend.ads.exception.AdsValidException;
 
 import java.math.BigDecimal;

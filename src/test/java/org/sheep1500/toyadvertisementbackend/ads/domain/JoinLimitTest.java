@@ -2,7 +2,7 @@ package org.sheep1500.toyadvertisementbackend.ads.domain;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.sheep1500.toyadvertisementbackend.ads.domain.fixture.JoinLimitFixture;
+import org.sheep1500.toyadvertisementbackend.fixture.JoinLimitFixture;
 import org.sheep1500.toyadvertisementbackend.ads.exception.AdsValidException;
 
 import java.util.stream.IntStream;
@@ -22,8 +22,7 @@ class JoinLimitTest {
     @DisplayName("광고 참여 인원 검증 실패: 0 이하")
     @Test
     void validJoinLimit_less_ZERO() {
-        int count = 10;
-        Throwable exception = assertThrows(AdsValidException.class, () -> JoinLimitFixture.createJoinLimit(count));
+        Throwable exception = assertThrows(AdsValidException.class, () -> JoinLimitFixture.createJoinLimit(0));
         assertEquals("no valid limit", exception.getMessage());
     }
 

@@ -1,4 +1,4 @@
-package org.sheep1500.toyadvertisementbackend.ads.domain.fixture;
+package org.sheep1500.toyadvertisementbackend.fixture;
 
 import org.sheep1500.toyadvertisementbackend.ads.domain.AdsInfo;
 
