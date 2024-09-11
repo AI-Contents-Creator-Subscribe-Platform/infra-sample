@@ -5,7 +5,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 
 @Configuration
 @EnableMongoRepositories(
-        basePackages = "org.sheep1500.*"  // MongoDB 관련 repository 경로
+        basePackages = "org.sheep1500.toyadvertisementbackend.ads_join.*"  // MongoDB 관련 repository 경로
 )
 public class MongoConfig {
     // 별도의 설정이 없으면 기본적으로 application.yml에서 설정을 읽음

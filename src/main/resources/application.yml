@@ -1,7 +1,9 @@
+server:
+  port: 8080
+
 spring:
   application:
     name: toy-advertisement-backend
-
   datasource:
     url: jdbc:mysql://localhost:3306/adsdb
     username: adsuser

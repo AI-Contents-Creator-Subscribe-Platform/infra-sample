@@ -32,10 +32,70 @@ docker-compose up -d
 - 설계 내용과 설계의 이유
 - 핵심 문제해결 전략 및 분석한 내용
 
+# 1. 프로젝트 설명
+
+---
+
+기술 스택
+
+Java(JDK 17), Spring Boot(3.3.3), RDBMS(MySQL, H2), NoSQL(MongoDB), Cache/Lock(Redis), Message Broker(RabbitMQ)
+
+### 빌드 및 실행 방법
+
+```
+// docker 설치 및 실행
+docker-compose up -d
+
+// docker 설치 후 실행
+docker-compose start
+
+// 빌드 운영체제별 gradle 명령어 MAC: gradlew, WINDOWS: gradlew.bat
+
+// 빌드, JDK 17
+./gradlew build
+
+// 프로젝트 실행, swagger ui 로 확인 가능 http://localhost/swagger-ui.html
+// gradlew
+./gradlew bootRun
+// java
+java -jar ./build/libs/toy-advertisement-backend-0.0.1-SNAPSHOT.jar
+
+// 테스트 실행
+./gradlew test
+// 결과는 ./build/reports/tests/test/index.html 에서 확인 가능
+```
+
+
+# 2. 시스템 설계
+
+---
+
+### 핵심 문제 파악 및 전략
+
+- 대용량 트래픽: 실제 사용자 데이터 기반으로 트래픽 추산
+  - 사용자 구분: 일반 사용자 / 가맹점으로 구분
+  - API TPS 계산: API를 분석하여, 구분 된 사용자가 사용하는 API로 분류 > 분류된 API를 사용자 수를 기반하여 TPS 계산
+- 서비스 분리: 분류된 API를 기반으로 분류 특성에 맞는 서비스 구분
+  
+- 데이터 저장소 구분: 사용자 데이터 구분하여, 데이터 별 최적화 DB 구분
+  - RDBMS: 빈번한 수정, 조회 데이터(광고 등록)
+  - NoSQL: 대용량 삽입 데이터(광고 참여 이력)
+- 성능 최적화
+  - 대용량 조회 API: Caching 적용, 없을 경우 DB 조회 후 Caching
+  - 대용량 처리 API: 두가지 조건을 충족하기 위해 Message Broker 적용하여 이벤트를 Queueing 해서 처리
+- 동시성 처리
+  - 여러개의 서버 구동을 고려하여 분산 Lock 적용 
+- 도메인 설계: DDD 기반 
+- 분리 된 서비스 간 의존성을 낮추기 위해 Event Driven 적용
+- 도메인 기능과 분리되는 기능인 캐싱, 락 역할 분리 
+
+
+
 ## 시스템 설계를 위한 대략적인 계산 (Back-of-the-envelope Estimation)
 
 ---
-데이터 근거: ${프로젝트경로}/kakaopay_AD_product_2406.pdf
+데이터 근거: **카카오페이 디스플레이 광고 상품 소개서**
+- 파일 경로: ${프로젝트경로}/kakaopay_AD_product_2406.pdf
 
 **Users**
 
@@ -100,7 +160,7 @@ docker-compose up -d
 
 **정리** 
 
-| 구분            | 사용자       | 가맹점      |
+| 구분            | 일반 사용자    | 가맹점      |
 |---------------|-----------|----------|
 | 전체 수          | 4,000만명   | 100만개    |
 | MAU           | 2,400만명   | 50만개     |
@@ -114,33 +174,69 @@ docker-compose up -d
 | STORAGE(Year) | 11,000 PB | 1,400 TB |
 
 
-## 시스템 아키텍처
+## 시스템 설계 - 아키텍쳐
 
 ---
+
+### **시스템 아키텍쳐**
+(위 시스템 설계를 위한 대략적인 계산 기반)  
+
 ![ads_archi](https://github.com/user-attachments/assets/733d9fe3-455c-4616-a1b4-26c19a57b009)
-- 사전 과제 미포함 요소: API Gateway, Load Balancer, CDN
-- 사전 과제 구성 변경 요소: API Server, Consumer 서버는 하나의 프로젝트로 구동
+- 미포함 요소: API Gateway, Load Balancer, CDN
+- 구성 변경 요소: API Server(광고, 사용자 광고), Consumer 서버는 하나의 프로젝트로 구동
 
-### 설계 고려 사항
+### 설계 이유
 
-1. 캐시 계층 도입: 광고 조회와 같은 빈번한 데이터 조회 API에 대한 응답 시간을 줄이기 위해 캐싱 활용
-2. 서비스 별 데이터베이스 구분
-   3. 광고 서비스: 사용자 대비 적은 가맹점 데이터, 참여 횟수, 기간 등 데이터 일관성 유지 필요하여 ACID 트랜잭션 지원하는 RDBMS 활용  
-   4. 사용자/광고 참여 서비스: 대량의 트래픽, 데이터를 고려하여, 대용량 데이터 및 수평적 확장성을 고려한 NoSQL
-3. 메시지 큐 및 비동기 처리
-   4. 여러 사용자가 동시에 광고에 참여할 경우, 락을 사용자 서비스에서 적용하면 서비스 지연 발생.
-   5. 광고 참여 발생 이벤트를 큐에 넣고, 이후 처리를 비동기로 수행하여 API 응답 및 서비스 가용성 개선
+서비스 사용자(일반 사용자, 가맹점)에 따른 기능 분리와 TPS, 데이터를 기반하여, 각 기능 별 서비스 분리
+
+**1. 광고 서비스**
+
+광고 등록(1 TPS)과 광고 조회(600 TPS)의 부하가 분리된 API 서버. 
+- 구성: Load Balancer, API Server, Cache, RDBMS
+- RDBMS: 조회, 수정을 고려하여 RDBMS로 적용
+  - 일일 86,400건이지만 지속적인 증가에 대비해 성능 최적화 필요
+- Cache: 대용량 트래픽(600 TPS)를 고려하여 조회 데이터 캐싱 처리
+  - TTL: 조회 시간 지났을 경우(1일)  
+  - Cache Evict: 조회 기간 내의 광고 등록 / 광고 참여 후 광고의 참여 가능 횟수가 0회로 변경 될 때
+
+
+**2. 사용자 광고 서비스**
+
+광고 참여 이력 조회, 광고 참여(600 TPS), 여러 사용자 광고 참여에 대한 동시성 이슈로 API 별 기능 분리
+- 구성: Load Balancer, API Server, Message Broker, NoSQL
+- NoSQL: 일일 1,700만 건의 광고 참여 이력 대용량 데이터를 저장하기 위해 NoSQL로 적용
+- Message Broker: 대용량 트래픽과 동시성 이슈를 처리하기 위해 광고 참여 요청을 Message Queue로 이벤트 처리
+
+**3. 사용자 광고 참여 서비스**
+
+대용량 트래픽과 동시성 이슈를 처리하기 위한 광고 참여 서비스로 분리
+- 구성: Consumer Server, (사용자 광고 서비스 구성) Message Broker, NoSQL
+- Consumer Server: Message Broker 에서 이벤트를 받아 비동기적으로 처리하여 트래픽 분산
+  - 급격한 트래픽 증가 대비 필요 
+
 
 ### 설계 미포함 고려 사항
-대용량 데이터
-- 조회를 위한 인덱스는 어떻게 ?
-  - 동적 파티셔닝 ?
-- 저장 공간은 어떻게 ? (사용자 1년: 63억 row / 11,000PB , 가맹점 1년: 3,200만개 / 1,400 TB)
-  - 파티셔닝? 동적 테이블?
+- 모니터링 및 로깅 
+  - 트래픽 증가에 대비해 실시간 스케일링 가능한 모니터링 시스템 필요
+- 백업 및 장애 복구
+  - DR 계획 
+- API Rate Limiting
+  - 트래픽 폭증 시 대비를 위한 Rate Limiting 설정 
+- 대용량 데이터
+  - 조회를 위한 인덱스는 어떻게 ?
+    - 동적 파티셔닝 ?
+  - 저장 공간은 어떻게 ? (사용자 1년: 63억 row / 11,000 PB , 가맹점 1년: 3,200만개 / 1,400 TB)
+    - 파티셔닝? 동적 테이블?
 
 
 
-## 도메인 
+# 3. 도메인 및 흐름도
+
+---
+
+## 도메인
+
+---
 
 ### 테이블
 
@@ -172,155 +268,10 @@ CREATE INDEX idx_ads_participation_date
 
 ```
 
-### **설명**:
-1. **ad_id**: 광고의 고유 ID로, `AUTO_INCREMENT`를 사용해 자동으로 증가하는 정수형 값입니다. `PRIMARY KEY`로 설정하여 유니크한 값이 보장됩니다.
-2. **ad_name**: 광고명은 중복을 허용하지 않기 때문에 `UNIQUE` 제약 조건을 추가했습니다.
-3. **reward_amount**: 광고 참여 시 적립되는 금액은 소수점 이하 두 자리까지 표시할 수 있는 `DECIMAL` 타입을 사용했습니다.
-4. **participation_limit**: 광고에 참여 가능한 횟수를 정수형으로 정의합니다.
-5. **ad_text**: 광고에 표시되는 문구는 최대 500자의 문자열로 정의했습니다.
-6. **image_url**: 광고 이미지의 URL을 최대 500자의 문자열로 정의했습니다.
-7. **display_start_date** 및 **display_end_date**: 광고가 노출될 기간을 각각 `DATE` 형식으로 저장합니다. 기간 동안만 광고가 노출됩니다.
-8. **UNIQUE (ad_name)**: 광고명은 중복될 수 없기 때문에 고유 제약 조건을 추가했습니다.
-
-
-MongoDB에서 **사용자 광고 참여 이력** 테이블을 구성하는 방법은 각 사용자의 광고 참여 이력을 문서 형식으로 저장하는 것입니다. 아래는 제안하는 NoSQL 기반의 MongoDB 컬렉션 스키마입니다.
-
-### **MongoDB Schema (광고 참여 이력 컬렉션)**
-
-```json
-{
-    "user_id": "string",           // 유저 ID
-    "ad_id": "string",             // 광고 ID
-    "ad_name": "string",           // 광고명
-    "reward_amount": "decimal",    // 적립 액수
-    "participation_time": "date"   // 광고 참여 시각
-}
-```
-
-### **MongoDB 컬렉션 구조**:
-
-MongoDB에서 이 스키마에 맞는 문서를 다루는 방법은 아래와 같이 `insert` 명령으로 새로운 참여 이력을 추가하는 방식입니다.
-
-### **예시 문서 구조**:
-
-```json
-{
-    "user_id": "user12345",
-    "ad_id": "ad9876",
-    "ad_name": "Great Discount Campaign",
-    "reward_amount": 1500.50,
-    "participation_time": ISODate("2024-09-09T14:00:00Z")
-}
-```
-
-### **설명**:
-1. **user_id**: 유저의 고유 식별자로, 문자열 형식입니다. 각 사용자의 고유 ID가 저장됩니다.
-2. **ad_id**: 참여한 광고의 고유 ID로, 문자열로 저장됩니다.
-3. **ad_name**: 광고의 이름을 저장합니다. 이는 가독성을 위해 광고명도 함께 저장합니다.
-4. **reward_amount**: 참여 시 적립되는 금액입니다. 소수점 이하 값까지 저장할 수 있도록 `decimal` 형식으로 설정합니다.
-5. **participation_time**: 광고 참여 시각을 ISODate 형식으로 저장합니다. MongoDB에서 날짜/시간 정보는 `ISODate` 형식을 권장합니다.
-
-### **장점**:
-- **확장성**: NoSQL(MongoDB) 구조는 자유롭기 때문에, 이후 추가적인 필드를 쉽게 추가할 수 있습니다.
-- **빠른 조회**: 사용자 ID, 광고 ID로 인덱스를 설정하면 참여 이력을 빠르게 조회할 수 있습니다.
-
-### **인덱스 설정**:
-효율적인 조회를 위해 인덱스를 설정할 수 있습니다.
-
-```javascript
-db.ad_participation_history.createIndex({ user_id: 1, participation_time: -1 });
-```
-
-이 인덱스는 사용자 ID별로 이력을 빠르게 조회하고, 최신 참여 시각 순으로 정렬된 결과를 제공합니다.
 
 
 
-이 테이블은 광고 서비스에서 사용될 기본적인 구조로, 다양한 광고 데이터 및 상태를 관리할 수 있습니다.
+## 흐름도
 
-사용자의 광고 참여 및 광고 참여 이력 조회 API를 구현할 때 **효율적인 MongoDB 인덱스**를 설정하여 성능을 최적화하는 것이 중요합니다. 특히, 사용자 ID와 광고 ID를 자주 조회하게 되므로 이에 맞는 인덱스를 설정해야 합니다.
+---
 
-### 1. **MongoDB 인덱스 개념**
-- **단일 필드 인덱스**: 하나의 필드에 대해 빠르게 조회 가능.
-- **복합 인덱스**: 여러 필드에 대해 효율적으로 조회 가능. 주로 자주 사용하는 조건문 필드에 대해 생성.
-- **TTL(Time-To-Live) 인덱스**: 시간이 지나면 자동으로 데이터를 삭제할 수 있도록 설정.
-
-### 2. **사용자의 광고 참여 및 광고 참여 이력 조회를 위한 필드**
-#### 사용자가 광고에 참여할 때:
-- `user_id`: 사용자의 참여 이력을 조회하거나 새로 참여할 때 중요한 필드.
-- `ad_id`: 사용자가 특정 광고에 참여했는지 확인할 때 자주 사용되는 필드.
-
-#### 광고 참여 이력을 조회할 때:
-- `user_id`: 특정 사용자에 대한 참여 이력을 조회할 때 필요.
-- `participation_time`: 특정 기간 동안의 참여 이력을 조회할 때 중요.
-
-### 3. **필요한 인덱스**
-
-#### 3.1. **사용자가 광고에 참여할 때**
-사용자가 **특정 광고에 참여했는지** 여부를 빠르게 확인하기 위해, **복합 인덱스**가 필요합니다.
-
-- **복합 인덱스** (`user_id`, `ad_id`): 사용자가 해당 광고에 참여했는지 확인할 때 빠른 조회를 위해 사용합니다.
-
-```javascript
-db.ads_participation_history.createIndex({ user_id: 1, ad_id: 1 });
-```
-
-이 인덱스는 `user_id`와 `ad_id`가 조합된 형태로 참여 여부를 빠르게 조회할 수 있게 합니다.
-
-#### 3.2. **사용자가 참여한 광고 이력 조회**
-특정 사용자의 광고 참여 이력을 조회할 때, **`user_id`**와 **`participation_time`** 필드가 자주 사용됩니다. 이 경우에도 **복합 인덱스**를 사용하면 효율적입니다.
-
-- **복합 인덱스** (`user_id`, `participation_time`): 특정 사용자의 참여 이력을 시간순으로 빠르게 조회할 수 있습니다.
-
-```javascript
-db.ads_participation_history.createIndex({ user_id: 1, participation_time: -1 });
-```
-
-이 인덱스는 사용자별 참여 이력을 **참여 시간 순으로** 내림차순 정렬하여 빠르게 조회할 수 있게 합니다.
-
-#### 3.3. **TTL 인덱스** (선택 사항)
-광고 참여 이력은 일정 기간이 지나면 더 이상 필요하지 않을 수 있습니다. 이 경우, **TTL 인덱스**를 설정하여 **특정 기간**이 지나면 자동으로 데이터를 삭제할 수 있습니다.
-
-- **TTL 인덱스** (`participation_time`): 예를 들어, 광고 참여 이력이 1년이 지나면 자동으로 삭제되도록 설정할 수 있습니다.
-
-```javascript
-db.ads_participation_history.createIndex({ participation_time: 1 }, { expireAfterSeconds: 31536000 }); // 1년 = 31,536,000초
-```
-
-이 TTL 인덱스는 **1년이 지난 참여 이력**을 자동으로 삭제하는 역할을 합니다.
-
-### 4. **인덱스 요약**
-1. **복합 인덱스** (`user_id`, `ad_id`): 사용자가 특정 광고에 참여했는지 빠르게 조회.
-2. **복합 인덱스** (`user_id`, `participation_time`): 특정 사용자의 광고 참여 이력을 시간 순으로 조회.
-3. **TTL 인덱스** (`participation_time`, 선택 사항): 일정 시간이 지난 참여 이력을 자동으로 삭제.
-
-### 5. **Spring Data MongoDB 인덱스 설정 예시**
-
-```java
-import org.springframework.data.mongodb.core.index.CompoundIndex;
-import org.springframework.data.mongodb.core.index.CompoundIndexes;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.util.Date;
-
-@Document(collection = "ads_participation_history")
-@CompoundIndexes({
-    @CompoundIndex(name = "user_ad_idx", def = "{'user_id' : 1, 'ad_id' : 1}"),
-    @CompoundIndex(name = "user_participation_time_idx", def = "{'user_id' : 1, 'participation_time' : -1}")
-})
-public class AdParticipationHistory {
-
-    @Indexed
-    private String userId;
-    private String adId;
-    private String adName;
-    private double rewardAmount;
-    private Date participationTime;
-
-    // Getters and Setters
-}
-```
-
-이 코드는 **Spring Data MongoDB**에서 복합 인덱스를 설정하는 예시입니다. `"user_ad_idx"`는 사용자와 광고를 기준으로 인덱스를 생성하고, `"user_participation_time_idx"`는 사용자와 참여 시간을 기준으로 내림차순 인덱스를 생성합니다.
-
-이런 방식으로 인덱스를 설정하면 광고 참여 이력 조회와 참여 여부 확인을 효율적으로 할 수 있습니다.

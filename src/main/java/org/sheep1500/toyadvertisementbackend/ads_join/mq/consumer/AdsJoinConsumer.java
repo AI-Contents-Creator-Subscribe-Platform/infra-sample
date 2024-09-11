@@ -8,6 +8,8 @@ import org.sheep1500.toyadvertisementbackend.ads.event.JoinAdsEvent;
 import org.sheep1500.toyadvertisementbackend.ads_join.application.CreateAdsJoinService;
 import org.sheep1500.toyadvertisementbackend.ads_join.domain.AdsJoinHistory;
 import org.sheep1500.toyadvertisementbackend.ads_join.domain.AdsJoinHistoryRepository;
+import org.sheep1500.toyadvertisementbackend.ads_join.external.AdsJoinRequestProxy;
+import org.sheep1500.toyadvertisementbackend.ads_join.external.dto.RewardPointDto;
 import org.sheep1500.toyadvertisementbackend.ads_join.mq.event.AdsJoinEvent;
 import org.sheep1500.toyadvertisementbackend.facade.LockAdsFacade;
 import org.sheep1500.toyadvertisementbackend.lock.LockData;
@@ -30,11 +32,13 @@ public class AdsJoinConsumer {
     private final CreateAdsJoinService createAdsJoinService;
     private final TransactionTemplate transactionTemplate;
     private final ApplicationEventPublisher eventPublisher;
+    private final AdsJoinRequestProxy joinRequestProxy;
 
     @RabbitListener(queues = RabbitMQConfig.QUEUE_NAME)
     public void handleJoinAds(AdsJoinEvent event) {
+        log.info("consuming event: queueName[{}], event[{}]", RabbitMQConfig.QUEUE_NAME, event);
         try {
-            lockAdsFacade.executeWithLock(new LockData(event.getAdId(), 100L, 100L),
+            lockAdsFacade.executeWithLock(new LockData(event.getAdId(), 3L, 3L),
                     () -> {
                         transactionTemplate.execute(new TransactionCallbackWithoutResult() {
                             @Override
@@ -55,8 +59,9 @@ public class AdsJoinConsumer {
 
                                     adsJoinHistoryRepository.save(adsJoinHistory);
 
-                                    eventPublisher.publishEvent(new JoinAdsEvent(new AdsId(event.getAdId()
-                                    )));
+                                    joinRequestProxy.rewardPoint(new RewardPointDto(event.getUserId(), event.getRewardAmount()));
+
+                                    eventPublisher.publishEvent(new JoinAdsEvent(new AdsId(event.getAdId())));
                                 } catch (Exception e) {
                                     // 트랜잭션 롤백
                                     status.setRollbackOnly();
