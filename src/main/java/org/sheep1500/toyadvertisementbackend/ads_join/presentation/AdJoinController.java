@@ -36,6 +36,6 @@ public class AdJoinController {
             @RequestParam LocalDateTime endDate,
             @PageableDefault(size = 50, sort = "joinDate", direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        return ApiResponseDto.createOK(queryAdsJoinService.listByUserId(userId, pageable));
+        return ApiResponseDto.createOK(queryAdsJoinService.listByUserId(new AdsJoinDto.JoinHistoryList(userId, startDate, endDate), pageable));
     }
 }
