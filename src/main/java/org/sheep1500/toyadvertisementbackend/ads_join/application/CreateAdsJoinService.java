@@ -24,7 +24,7 @@ public class CreateAdsJoinService {
     private final QueryAdsJoinService queryAdsJoinService;
 
     @Transactional
-    public void create(AdsJoinDto.Create dto) {
+    public void requestJoinAd(AdsJoinDto.Create dto) {
         // 참여가능한지 조회
         Ads ads = queryAdsService.getAds(new AdsId(dto.adId()))
                 .orElseThrow(() -> new EntityNotFoundException("ads not exist"));
@@ -55,13 +55,6 @@ public class CreateAdsJoinService {
         Ads ads = queryAdsService.getAds(new AdsId(adId))
                 .orElseThrow(() -> new EntityNotFoundException("ads not exist"));
 
-        if (!ads.enableJoin()) {
-            throw new DisableJoinAdsException("current limit over");
-        }
-
-        queryAdsJoinService.getByUserIdAndAdId(userId, adId)
-                .ifPresent(o -> {
-                    throw new AdsJoinExistException();
-                });
+        this.validJoin(userId, ads);
     }
 }

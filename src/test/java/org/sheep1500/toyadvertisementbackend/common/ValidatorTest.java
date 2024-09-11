@@ -50,10 +50,10 @@ public class ValidatorTest {
     @Test
     void violation_adsJoinRequest_create_success() {
         // given
-        AdsJoinRequest.Create request = new AdsJoinRequest.Create("userId", "adId");
+        AdsJoinRequest.Request request = new AdsJoinRequest.Request("userId", "adId");
 
         // when
-        Set<ConstraintViolation<AdsJoinRequest.Create>> violations = validator.validate(request);
+        Set<ConstraintViolation<AdsJoinRequest.Request>> violations = validator.validate(request);
 
         // then
         assertEquals(0, violations.size());
@@ -63,10 +63,10 @@ public class ValidatorTest {
     @Test
     void violation_adsJoinRequest_create_fail() {
         // given
-        AdsJoinRequest.Create request = new AdsJoinRequest.Create("", "");
+        AdsJoinRequest.Request request = new AdsJoinRequest.Request("", "");
 
         // when
-        Set<ConstraintViolation<AdsJoinRequest.Create>> violations = validator.validate(request);
+        Set<ConstraintViolation<AdsJoinRequest.Request>> violations = validator.validate(request);
 
         // then
         assertEquals(2, violations.size());

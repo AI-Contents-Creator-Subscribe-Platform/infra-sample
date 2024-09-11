@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class AdsJoinRequest {
 
-    public record Create(@NotEmpty String userId, @NotEmpty String adId) {
+    public record Request(@NotEmpty String userId, @NotEmpty String adId) {
 
     }
 }
