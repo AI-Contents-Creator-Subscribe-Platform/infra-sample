@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.sheep1500.toyadvertisementbackend.ads.application.ReduceAdsJoinService;
 import org.sheep1500.toyadvertisementbackend.ads.domain.AdsId;
 import org.sheep1500.toyadvertisementbackend.ads.event.JoinAdsEvent;
-import org.sheep1500.toyadvertisementbackend.ads_join.application.CreateAdsJoinService;
+import org.sheep1500.toyadvertisementbackend.ads_join.application.RequestAdsJoinService;
 import org.sheep1500.toyadvertisementbackend.ads_join.domain.AdsJoinHistory;
 import org.sheep1500.toyadvertisementbackend.ads_join.domain.AdsJoinHistoryRepository;
 import org.sheep1500.toyadvertisementbackend.ads_join.external.AdsJoinRequestProxy;
@@ -29,7 +29,7 @@ public class AdsJoinConsumer {
     private final AdsJoinHistoryRepository adsJoinHistoryRepository;
     private final LockAdsFacade lockAdsFacade;
     private final ReduceAdsJoinService reduceAdsJoinService;
-    private final CreateAdsJoinService createAdsJoinService;
+    private final RequestAdsJoinService requestAdsJoinService;
     private final TransactionTemplate transactionTemplate;
     private final ApplicationEventPublisher eventPublisher;
     private final AdsJoinRequestProxy joinRequestProxy;
@@ -45,7 +45,7 @@ public class AdsJoinConsumer {
                             protected void doInTransactionWithoutResult(TransactionStatus status) {
                                 try {
                                     // 트랜잭션 내에서 실행할 메소드
-                                    createAdsJoinService.validJoin(event.getUserId(), event.getAdId());
+                                    requestAdsJoinService.validJoin(event.getUserId(), event.getAdId());
 
                                     reduceAdsJoinService.reduceJoinCount(new AdsId(event.getAdId()));
 

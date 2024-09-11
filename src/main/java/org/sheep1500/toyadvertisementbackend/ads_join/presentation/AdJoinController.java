@@ -2,7 +2,7 @@ package org.sheep1500.toyadvertisementbackend.ads_join.presentation;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.sheep1500.toyadvertisementbackend.ads_join.application.CreateAdsJoinService;
+import org.sheep1500.toyadvertisementbackend.ads_join.application.RequestAdsJoinService;
 import org.sheep1500.toyadvertisementbackend.ads_join.application.dto.AdsJoinDto;
 import org.sheep1500.toyadvertisementbackend.ads_join.domain.QueryAdsJoinService;
 import org.sheep1500.toyadvertisementbackend.ads_join.presentation.dto.AdsJoinRequest;
@@ -19,12 +19,12 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class AdJoinController {
 
-    private final CreateAdsJoinService createAdsJoinService;
+    private final RequestAdsJoinService requestAdsJoinService;
     private final QueryAdsJoinService queryAdsJoinService;
 
     @PostMapping
     public ApiResponseDto<?> requestJoinAd(@RequestBody @Valid AdsJoinRequest.Request request) {
-        createAdsJoinService.requestJoinAd(new AdsJoinDto.Create(request.userId(), request.adId()));
+        requestAdsJoinService.requestJoinAd(new AdsJoinDto.Create(request.userId(), request.adId()));
 
         return ApiResponseDto.DEFAULT_OK;
     }

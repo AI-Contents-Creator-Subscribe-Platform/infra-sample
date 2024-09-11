@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
-public class CreateAdsJoinService {
+public class RequestAdsJoinService {
     private final AdsJoinProducer adsJoinProducer;
     private final QueryAdsService queryAdsService;
     private final QueryAdsJoinService queryAdsJoinService;
