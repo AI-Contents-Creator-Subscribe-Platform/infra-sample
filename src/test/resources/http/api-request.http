@@ -2,7 +2,7 @@ POST http://localhost:8080/api/v1/ads
 Content-Type: application/json
 
 {
-  "name": "test11",
+  "name": "test1",
   "reward": 1100,
   "joinCount": 10,
   "text": "text",
@@ -20,8 +20,8 @@ POST http://localhost:8080/api/v1/joinAd
 Content-Type: application/json
 
 {
-  "userId": "userId10",
-  "adId": "ads2409110018191wjg2ke4rcewn"
+  "userId": "userId3",
+  "adId": "ads2409111242351e97xs4qfqn8l"
 }
 
 ###

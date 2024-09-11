@@ -1,10 +1,10 @@
 ## 개발
 
 ---
+**TODO**
 
-docker-compose up -d
-<br/>
-./gradlew 
+- 도메인 & 흐름도 (수요일 작업)
+- 통합 테스트
 
 
 ## 요구사항
