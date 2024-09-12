@@ -14,7 +14,7 @@ import org.sheep1500.toyadvertisementbackend.common.entity.BaseEntity;
 })
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class AdsContent extends BaseEntity {
+public class AdsContent {
 
     @EmbeddedId
     private AdsId adsId;

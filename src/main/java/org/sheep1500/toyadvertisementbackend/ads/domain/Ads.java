@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 )
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Ads extends BaseEntity {
+public class Ads {
 
     @EmbeddedId
     private AdsId id;
