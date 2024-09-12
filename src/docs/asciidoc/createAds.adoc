@@ -1,0 +1,8 @@
+include::{snippets}/createAds/curl-request.adoc[]
+include::{snippets}/createAds/http-request.adoc[]
+include::{snippets}/createAds/http-response.adoc[]
+include::{snippets}/createAds/request-body.adoc[]
+include::{snippets}/createAds/request-fields.adoc[]
+include::{snippets}/createAds/response-fields.adoc[]
+include::{snippets}/createAds/response-body.adoc[]
+include::{snippets}/createAds/response-fields.adoc[]

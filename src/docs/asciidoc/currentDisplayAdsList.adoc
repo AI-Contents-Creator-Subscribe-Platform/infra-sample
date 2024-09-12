@@ -1,0 +1,7 @@
+include::{snippets}/currentDisplayAdsList/curl-request.adoc[]
+include::{snippets}/currentDisplayAdsList/http-request.adoc[]
+include::{snippets}/currentDisplayAdsList/http-response.adoc[]
+include::{snippets}/currentDisplayAdsList/request-body.adoc[]
+include::{snippets}/currentDisplayAdsList/response-fields.adoc[]
+include::{snippets}/currentDisplayAdsList/response-body.adoc[]
+include::{snippets}/currentDisplayAdsList/response-fields.adoc[]

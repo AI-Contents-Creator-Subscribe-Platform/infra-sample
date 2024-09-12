@@ -30,17 +30,20 @@ docker-compose start
 // 빌드 운영체제별 gradle 명령어 MAC: gradlew, WINDOWS: gradlew.bat
 
 // 빌드, JDK 17
-./gradlew build
+./gradle build
 
-// 프로젝트 실행, swagger ui 로 확인 가능 http://localhost/swagger-ui.html
 // gradlew
-./gradlew bootRun
+./gradle bootRun
+
 // java
 java -jar ./build/libs/toy-advertisement-backend-0.0.1-SNAPSHOT.jar
 
-// 테스트 실행
-./gradlew test
-// 결과는 ./build/reports/tests/test/index.html 에서 확인 가능
+// 테스트 실행, 결과는 ./build/reports/tests/test/index.html 에서 확인 가능
+./gradle test
+
+// API 확인, Spring REST Docs, 경로는 ./build/docs/asciidoc/*.html
+./gradle clean asciidoctor
+
 ```
 
 
@@ -224,6 +227,5 @@ java -jar ./build/libs/toy-advertisement-backend-0.0.1-SNAPSHOT.jar
 ### 사용자 광고/참여 서비스 Flow
 
 ![사용자광고flow](https://github.com/user-attachments/assets/42753435-63ff-48aa-81fc-86ede3ce70bf)
-
 
 

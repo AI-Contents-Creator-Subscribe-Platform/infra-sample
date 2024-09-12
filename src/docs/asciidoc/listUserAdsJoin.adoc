@@ -1,0 +1,7 @@
+include::{snippets}/listUserAdsJoin/curl-request.adoc[]
+include::{snippets}/listUserAdsJoin/http-request.adoc[]
+include::{snippets}/listUserAdsJoin/http-response.adoc[]
+include::{snippets}/listUserAdsJoin/request-body.adoc[]
+include::{snippets}/listUserAdsJoin/response-fields.adoc[]
+include::{snippets}/listUserAdsJoin/response-body.adoc[]
+include::{snippets}/listUserAdsJoin/response-fields.adoc[]

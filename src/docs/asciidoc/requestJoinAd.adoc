@@ -1,0 +1,8 @@
+include::{snippets}/requestJoinAd/curl-request.adoc[]
+include::{snippets}/requestJoinAd/http-request.adoc[]
+include::{snippets}/requestJoinAd/http-response.adoc[]
+include::{snippets}/requestJoinAd/request-body.adoc[]
+include::{snippets}/requestJoinAd/request-fields.adoc[]
+include::{snippets}/requestJoinAd/response-fields.adoc[]
+include::{snippets}/requestJoinAd/response-body.adoc[]
+include::{snippets}/requestJoinAd/response-fields.adoc[]
