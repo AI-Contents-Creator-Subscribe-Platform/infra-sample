@@ -30,16 +30,16 @@ docker-compose start
 // 빌드 운영체제별 gradle 명령어 MAC: gradlew, WINDOWS: gradlew.bat
 
 // 빌드, JDK 17
-./gradle build
+./gradlew build
 
 // gradlew
-./gradle bootRun
+./gradlew bootRun
 
 // java
 java -jar ./build/libs/toy-advertisement-backend-0.0.1-SNAPSHOT.jar
 
 // 테스트 실행, 결과는 ./build/reports/tests/test/index.html 에서 확인 가능
-./gradle test
+./gradlew test
 
 ```
 
@@ -48,7 +48,7 @@ java -jar ./build/libs/toy-advertisement-backend-0.0.1-SNAPSHOT.jar
 아래 명령어 실행 후, `./build/docs/asciidoc/api-list.html` 에서 확인 가능
 ```
 // Spring REST Docs 실행
-./gradle clean asciidoctor
+./gradlew clean asciidoctor
 ```
 
 # 2. 시스템 설계
