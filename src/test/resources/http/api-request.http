@@ -2,12 +2,12 @@ POST http://localhost:8080/api/v1/ads
 Content-Type: application/json
 
 {
-  "name": "test6",
-  "reward": 1300,
-  "joinCount": 1,
+  "name": "test3",
+  "reward": 2300,
+  "joinCount": 10,
   "text": "text",
   "imageUrl": "url",
-  "startDate": "2024-09-12T00:20:00",
+  "startDate": "2024-09-10T00:20:00",
   "endDate": "2024-09-19T23:59:00"
 }
 
@@ -16,12 +16,12 @@ GET http://localhost:8080/api/v1/ads/currentDisplayAdsList
 
 
 ###
-POST http://localhost:8080/api/v1/joinAd
+POST http://localhost:8080/api/v1/joinAd/request
 Content-Type: application/json
 
 {
   "userId": "userId1",
-  "adId": "ads24091210421417ju2fpq0qccj"
+  "adId": "ads240912142933hd2updgnq16v6"
 }
 
 ###

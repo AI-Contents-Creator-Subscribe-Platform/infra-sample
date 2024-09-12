@@ -22,7 +22,7 @@ public class AdJoinController {
     private final RequestAdsJoinService requestAdsJoinService;
     private final QueryAdsJoinService queryAdsJoinService;
 
-    @PostMapping
+    @PostMapping("/request")
     public ApiResponseDto<?> requestJoinAd(@RequestBody @Valid AdsJoinRequest.Request request) {
         requestAdsJoinService.requestJoinAd(new AdsJoinDto.Create(request.userId(), request.adId()));
 

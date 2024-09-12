@@ -74,7 +74,7 @@ class AdsControllerTest extends BaseRestDocTest {
                 .andExpect(jsonPath("$.data.content.info.name").value(ads.getContent().getInfo().getName()))
                 .andExpect(jsonPath("$.data.content.info.text").value(ads.getContent().getInfo().getText()))
                 .andExpect(jsonPath("$.data.content.image.url").value(ads.getContent().getImage().getUrl()))
-                .andDo(document("/api/v1/ads",
+                .andDo(document("createAds",
                         requestFields(
                                 fieldWithPath("name").description("광고명"),
                                 fieldWithPath("reward").description("광고 참여시 적립액수"),
@@ -133,8 +133,9 @@ class AdsControllerTest extends BaseRestDocTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(RtCode.RT_SUCCESS.name()))
                 .andExpect(jsonPath("$.message").value((RtCode.RT_SUCCESS).getRtMessage()))
+                .andExpect(jsonPath("$.data").isArray())
                 .andExpect(jsonPath("$.data", hasSize(count)))
-                .andDo(document("/api/v1/ads/currentDisplayAdsList",
+                .andDo(document("currentDisplayAdsList",
                         responseFields(
                                 fieldWithPath("code").description("상태 코드"),
                                 fieldWithPath("message").description("결과 메시지"),
