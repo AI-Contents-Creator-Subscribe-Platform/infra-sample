@@ -47,7 +47,7 @@ java -jar ./build/libs/toy-advertisement-backend-0.0.1-SNAPSHOT.jar
 <br/>
 아래 명령어 실행 후, `./build/docs/asciidoc/api-list.html` 에서 확인 가능
 ```
-// Spring REST Docs 실행
+// Spring REST Docs, (빌드했으면 할 필요 없음)
 ./gradlew clean asciidoctor
 ```
 
