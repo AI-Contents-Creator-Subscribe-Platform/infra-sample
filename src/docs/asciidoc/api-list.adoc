@@ -1,0 +1,144 @@
+= API Documentation
+:toc: left
+:toclevels: 2
+:sectnums:
+
+== 광고 등록 API
+[cols="1,4",options="header"]
+|===
+|항목 |설명
+
+|**HTTP Method**
+|POST
+
+|**URL**
+|`/api/v1/ads`
+
+|**설명**
+|광고를 등록하는 API
+
+|**Request Content-Type**
+|application/json
+|===
+
+==== 요청 파라미터
+include::{snippets}/createAds/request-fields.adoc[]
+
+==== 요청 예시
+
+include::{snippets}/createAds/http-request.adoc[]
+
+==== 응답 파라미터
+include::{snippets}/createAds/response-fields.adoc[]
+
+==== 응답 예시
+
+include::{snippets}/createAds/http-response.adoc[]
+
+== 광고 조회 API
+[cols="1,4",options="header"]
+|===
+|항목 |설명
+
+|**HTTP Method**
+|POST
+
+|**URL**
+|`/api/v1/ads/currentDisplayAdsList`
+
+|**설명**
+|광고 조회하는 API
+
+
+|===
+
+==== 요청 예시
+
+include::{snippets}/currentDisplayAdsList/http-request.adoc[]
+
+==== 응답 파라미터
+include::{snippets}/currentDisplayAdsList/response-fields.adoc[]
+
+==== 응답 예시
+
+include::{snippets}/currentDisplayAdsList/http-response.adoc[]
+
+== 광고 참여 요청 API
+[cols="1,4",options="header"]
+|===
+|항목 |설명
+
+|**HTTP Method**
+|POST
+
+|**URL**
+|`/api/v1/joinAd/request`
+
+|**설명**
+|사용자가 광고 참여 요청하는 API
+
+|**Request Content-Type**
+|application/json
+|===
+
+==== 요청 파라미터
+include::{snippets}/requestJoinAd/request-fields.adoc[]
+
+==== 요청 예시
+
+include::{snippets}/requestJoinAd/http-request.adoc[]
+
+==== 응답 파라미터
+include::{snippets}/requestJoinAd/response-fields.adoc[]
+
+==== 응답 예시
+
+include::{snippets}/requestJoinAd/http-response.adoc[]
+
+== 광고 참여 이력 조회 API
+[cols="1,4",options="header"]
+|===
+|항목 |설명
+
+|**HTTP Method**
+|POST
+
+|**URL**
+|`/api/v1/joinAd/{userId}/list`
+
+|**설명**
+|사용자 광고 참여이력 조회하는 API
+
+
+|===
+
+==== 요청 파라미터
+
+[cols="1,1,4",options="header"]
+|===
+|이름 |타입 |설명
+
+|`userId`
+|`String`
+|사용자 ID
+
+|`startDate`
+|`String`
+|조회 시작일시
+
+|`endDate`
+|`String`
+|조회 종료일시
+|===
+
+==== 요청 예시
+
+include::{snippets}/listUserAdsJoin/http-request.adoc[]
+
+==== 응답 파라미터
+include::{snippets}/listUserAdsJoin/response-fields.adoc[]
+
+==== 응답 예시
+
+include::{snippets}/listUserAdsJoin/http-response.adoc[]
+

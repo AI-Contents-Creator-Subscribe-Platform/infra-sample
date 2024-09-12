@@ -45,7 +45,7 @@ java -jar ./build/libs/toy-advertisement-backend-0.0.1-SNAPSHOT.jar
 
 **API 명세서: Spring REST Docs**
 <br/>
-아래 명령어 실행 후, `./build/docs/asciidoc/*.html` 에서 확인 가능
+아래 명령어 실행 후, `./build/docs/asciidoc/api-list.html` 에서 확인 가능
 ```
 // Spring REST Docs 실행
 ./gradle clean asciidoctor
