@@ -41,11 +41,15 @@ java -jar ./build/libs/toy-advertisement-backend-0.0.1-SNAPSHOT.jar
 // 테스트 실행, 결과는 ./build/reports/tests/test/index.html 에서 확인 가능
 ./gradle test
 
-// API 확인, Spring REST Docs, 경로는 ./build/docs/asciidoc/*.html
-./gradle clean asciidoctor
-
 ```
 
+**API 명세서: Spring REST Docs**
+<br/>
+아래 명령어 실행 후, `./build/docs/asciidoc/*.html` 에서 확인 가능
+```
+// Spring REST Docs 실행
+./gradle clean asciidoctor
+```
 
 # 2. 시스템 설계
 
